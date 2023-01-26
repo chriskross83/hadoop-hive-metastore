@@ -1,5 +1,4 @@
-
-nfiguration>
+<configuration>
     <property>
         <name>hive.metastore.local</name>
         <value>false</value>
