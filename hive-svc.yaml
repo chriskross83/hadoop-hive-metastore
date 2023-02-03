@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hive-hms
+  labels:
+    app: hive-hms
+spec:
+  ports:
+  - port: 9083
+    name: thrift
+  clusterIP: None
+  selector:
+    app: hive-hms

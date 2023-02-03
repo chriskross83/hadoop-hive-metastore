@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: hive-hms-set
+spec:
+  selector:
+    matchLabels:
+      app: hive-hms
+  serviceName: "hive-hms"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hive-hms
+    spec:
+      serviceAccountName: hive-sa
+      containers:
+      - name: hive-hms
+        command:
+        - /bin/sh
+        - '-c'
+        - /opt/hive/bin/hive --service metastore
+        env:
+        - name: HADOOP_CONF_DIR
+          value: /opt/hadoop/etc/hadoop
+        ports:
+        - name: thrift
+          containerPort: 9083
+          protocol: TCP
+        volumeMounts:
+        - name: hive-site
+          mountPath: /opt/hive/conf/hive-site.xml
+          subPath: hive-site.xml
+        - name: hive-site
+          mountPath: /opt/hadoop/etc/hadoop/core-site.xml
+          subPath: core-site.xml
+        image: chriskross83/hadoop-hive:latest
+      volumes:
+      - name: hive-site
+        configMap:
+          name: hive-hms-config
+          defaultMode: 420
